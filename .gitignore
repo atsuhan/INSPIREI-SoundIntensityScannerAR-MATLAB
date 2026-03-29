@@ -1,0 +1,18 @@
+# MATLAB
+*.asv
+*.mex*
+*.mlappinstall
+slprj/
+codegen/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Measurement data (binary, large)
+*.bytes
+
+# Temporary
+*.tmp
+*.bak

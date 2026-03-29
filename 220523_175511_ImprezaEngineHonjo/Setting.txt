@@ -1,0 +1,6 @@
+﻿Sample Rate : sixteen
+Sample Length : 4096
+Mic Interval : 0.05
+Barometric Pressure : 1002
+Temperature : 24.6
+Measured Points : 532
