@@ -15,6 +15,13 @@ clear; clc;
 cfg = config();
 
 %% データ読み込み
+% データがない場合はテストデータを生成
+if ~isfile(fullfile(cfg.dataFolder, 'Setting.txt'))
+    fprintf('\n警告: Setting.txt が見つかりません\n');
+    fprintf('テスト用のダミーデータを生成します...\n\n');
+    generateTestData(cfg.dataFolder, 10, 4096);
+end
+
 setting = loadSetting(cfg.dataFolder);
 data = loadBytes(cfg.dataFolder);
 
@@ -34,8 +41,23 @@ data = applyRotation(data, cfg.eulerAngles);
 data = filterPoints(data, cfg.filterCondition);
 
 %% 3Dプロット
-plotScatter3d(data, [], '2022 Impreza Engine - Measurement Points');
+fig = plotScatter3d(data, [], '2022 Impreza Engine - Measurement Points');
 
-%% エクスポート（必要に応じてコメント解除）
-% if ~isfolder(cfg.outputFolder), mkdir(cfg.outputFolder); end
-% exportBytes(cfg.outputFolder, data);
+%% 成果物の保存
+outputFolder = cfg.outputFolder;
+if ~isfolder(outputFolder)
+    mkdir(outputFolder);
+end
+
+% PNGファイルを保存
+pngPath = fullfile(outputFolder, 'measurement_points_3d.png');
+saveas(fig, pngPath);
+fprintf('\n✓ PNG保存: %s\n', pngPath);
+
+% MATファイルを保存（データと設定）
+matPath = fullfile(outputFolder, 'analysis_results.mat');
+save(matPath, 'data', 'setting', 'cfg');
+fprintf('✓ MAT保存: %s\n', matPath);
+
+close(fig);
+fprintf('\n===== 解析完了 =====\n');
