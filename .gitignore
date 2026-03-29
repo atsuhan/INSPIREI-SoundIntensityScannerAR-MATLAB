@@ -12,6 +12,10 @@ desktop.ini
 
 # Measurement data (binary, large)
 *.bytes
+**/data/
+
+# Archives (old code, not tracked)
+archives/
 
 # Temporary
 *.tmp

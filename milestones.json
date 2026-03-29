@@ -1,0 +1,52 @@
+{
+  "project": "SISAR MATLAB解析ツール群",
+  "milestones": [
+    {
+      "id": 1,
+      "title": "基盤: 関数分離とプロジェクト構成",
+      "goal": "startup.m実行後、projects/2022_impreza_engine/run_analysis.mでbytesデータの読み込み→座標変換→フィルタリング→3Dプロットが動作する",
+      "done": true,
+      "tasks": []
+    },
+    {
+      "id": 2,
+      "title": "WAV対応: 4ch WAVファイルからインテンシティ計算",
+      "goal": "4ch WAVファイルを読み込み、クロススペクトル法で音響インテンシティを計算し、3Dベクトル場として可視化できる",
+      "done": false,
+      "tasks": []
+    },
+    {
+      "id": 3,
+      "title": "CSV入出力: 汎用データ連携",
+      "goal": "計測データをCSV（スカラー場/ベクトル場）に出力でき、CSVからの読み込みも可能",
+      "done": false,
+      "tasks": []
+    },
+    {
+      "id": 4,
+      "title": "App Designer: GUIアプリ化",
+      "goal": "App Designerアプリでフォルダ選択→データ読み込み→パラメータ設定→インテンシティ計算→3D可視化が一連の操作で完了する",
+      "done": false,
+      "tasks": []
+    }
+  ],
+  "_comment_tasks_example": {
+    "_note": "tasksはPlannerが着手時に詳細設計して埋める。以下は構造の参考",
+    "tasks": [
+      {
+        "id": "2-1",
+        "title": "calc_intensity: クロススペクトル法による音響インテンシティ計算",
+        "wave": 1,
+        "done": false,
+        "branch": "feature/2-1-calc-intensity"
+      },
+      {
+        "id": "2-2",
+        "title": "WAV計測キャンペーンの解析スクリプト",
+        "wave": 2,
+        "done": false,
+        "branch": "feature/2-2-wav-project"
+      }
+    ]
+  }
+}
