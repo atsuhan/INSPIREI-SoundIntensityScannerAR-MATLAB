@@ -42,6 +42,7 @@
 5. `functions/` の関数変更時は呼び出し側（全 projects/ の runAnalysis.m）の引数整合を確認
 6. 検証用の**一時スクリプト/ログは実行後に必ず削除**
 7. 書式: `pwsh -File ../INSPIREI-Manager/scripts/validate_milestones.ps1 MILESTONES.md`
+   （隣に INSPIREI-Manager がある ワークスペース構成のみ。単体 clone では末尾の書式規約との目視照合で代替）
 
 ## 禁止
 
