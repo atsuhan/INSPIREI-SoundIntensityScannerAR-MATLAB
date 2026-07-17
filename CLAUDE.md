@@ -40,8 +40,30 @@
 ## Development Style
 - 機能単位の縦割りで段階的に動くものを作る
 - 完了条件は「実際に動くこと」
-- ralph-loop: Planner → Builder → Verifier → Professor の順で進める
-- IMPORTANT: Professor（音響工学の教授）の審査を通過しないとマイルストーンは完了しない
+- IMPORTANT: 物理量・単位・座標系・信号処理に触るタスクは professor（音響工学の教授）の審査を通過しないと完了しない
+
+## タスク運用
+- タスク管理: `MILESTONES.md`（リポ直下・正本）／ 自走ループ: `PROMPT.md`（1ループ1タスク）
+- milestones.json は廃止済み（2026-07-17。git 履歴には残る）
+
+## 開発チーム（実体エージェント）
+
+`planner → builder → reviewer` を順に回し、雑務は `clerk` に切り出す。professor は招集制（read-only）:
+
+| 役割 | エージェント | model |
+|---|---|---|
+| Planner（計画・理論検証・タスク分解・**受け入れ条件の定義**。実装しない） | `planner` | **fable** |
+| Builder（実装・仮実装禁止・自己checkcode/試走・**検証結果を添えて完了報告**） | `builder` | **sonnet**（難所はopus） |
+| Reviewer（挙動検証・レビュー。物理の合否は代行しない） | `reviewer` | **fable** |
+| Professor（音響工学の教授。物理的正当性の最終審査・招集制） | `professor` | **fable** |
+| Clerk（雑務: 整理・変換・転記。内容判断なし） | `clerk` | **sonnet** |
+
+## モデル方針（全リポジトリ共通）
+- **難しい作業（計画・確認・デザイン）= Fable**（`planner` / `reviewer` / `professor`）／**実装 = Sonnet 既定・難所は Opus**（`builder` を `model=opus` で起用）／**雑務 = Sonnet**（`clerk`）
+
+## メモリ方針
+- **二層方式**: claude-mem（自動・ローカル）＋ `docs/decisions/decisions.md`（ADR＝git同期される正本）
+- **後々効く決定・前提・禁止事項は `docs/decisions/decisions.md` に追記する**（追記専用。既存エントリは書き換えず、覆ったら新エントリ＋旧に差し替え行）。claude-mem はセッション内リコール用
 
 ## Project-Specific Notes
 - 座標系: Unity左手系。可視化時にZ軸を反転する
