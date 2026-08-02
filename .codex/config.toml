@@ -1,0 +1,21 @@
+# BEGIN INSPIREI AGENT HARNESS PERMISSIONS
+# managed-by: INSPIREI/agent-harness
+# Keep the normal workspace sandbox, but allow repository integration and
+# Harness-managed agent definitions inside a trusted INSPIREI checkout.
+default_permissions = "inspirei-repository"
+
+[permissions.inspirei-repository]
+description = "INSPIREI repository development with Git integration."
+extends = ":workspace"
+
+[permissions.inspirei-repository.filesystem.":workspace_roots"]
+".git" = "write"
+".agents" = "write"
+".codex/agents" = "write"
+
+[permissions.inspirei-repository.network]
+enabled = true
+
+[permissions.inspirei-repository.network.domains]
+"*" = "allow"
+# END INSPIREI AGENT HARNESS PERMISSIONS

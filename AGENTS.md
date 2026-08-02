@@ -18,4 +18,6 @@
 
 共通Agentは `planner`、`researcher`、`builder`、`reviewer`、`clerk`。専門Agentがある場合は `project.md` の指示に従う。
 
+commitまで行う作業は、差分を積み上げる前に `powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent-harness/Test-GitWriteAccess.ps1` を実行する。
+
 実装依頼では、ユーザーが明示的に止めない限り、利用可能な検証、STATUS更新、commit、push、PR、merge、ローカル同期、今回のマージ済み作業ブランチのローカル・origin削除までを標準完了範囲とする。
