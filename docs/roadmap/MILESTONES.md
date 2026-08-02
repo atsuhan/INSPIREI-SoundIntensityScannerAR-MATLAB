@@ -1,7 +1,7 @@
 # MILESTONES — INSPIREI-SoundIntensityScannerAR-MATLAB
 
 > **タスクの正本**。人間がそのまま読め、コマンドやエージェントが行頭書式をパースする。
-> **書式規約（末尾）を崩さない**。運用ループは `PROMPT.md`。
+> **書式規約（末尾）を崩さない**。運用ループは `.agents/skills/development-loop/SKILL.md`。
 
 **状態:** フェーズ定義済み・タスク未分解（2026-07-17 に milestones.json から移行）
 **採番:** `P<フェーズ>-<連番>`（backlog は `BL-<連番>`）。番号の欠番再利用は禁止。新タスクは各フェーズ末尾に連番追加
