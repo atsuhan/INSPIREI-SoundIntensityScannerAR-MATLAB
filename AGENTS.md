@@ -18,4 +18,4 @@
 
 共通Agentは `planner`、`researcher`、`builder`、`reviewer`、`clerk`。専門Agentがある場合は `project.md` の指示に従う。
 
-実装依頼では、ユーザーが明示的に止めない限り、利用可能な検証、STATUS更新、commit、push、PR、merge、ローカル同期までを標準完了範囲とする。
+実装依頼では、ユーザーが明示的に止めない限り、利用可能な検証、STATUS更新、commit、push、PR、merge、ローカル同期、今回のマージ済み作業ブランチのローカル・origin削除までを標準完了範囲とする。

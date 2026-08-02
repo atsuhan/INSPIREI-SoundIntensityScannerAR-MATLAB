@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.0
+Harness-Version: 1.0.1
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
@@ -22,7 +22,9 @@ Harness-Version: 1.0.0
 - 実装できる範囲を作り切り、利用可能な検証を実行する。
 - 未検証や別環境での調整は、具体的な完了条件を持つ後続項目としてMilestoneへ残す。
 - 別のAIが明確に優位な工程だけを引き継ぎ対象とし、Milestoneへ理由、担当候補、入力成果物、受入条件、未検証範囲を残す。
-- 原則としてcommit、push、ready PR、merge、ローカル同期、マージ済みブランチ整理まで行う。
+- 原則としてcommit、push、ready PR、merge、ローカル同期、マージ済みブランチ削除まで行う。
+- PRのMERGED状態を確認して基底ブランチを最新化した後、その作業ブランチをローカルとoriginの両方から削除し、`fetch --prune` 後に残っていないことを確認する。
+- 未マージ、保護対象、共有中、別作業、所有者不明のブランチは削除しない。削除対象は完了した自分の作業ブランチに限定する。
 - CIやテストのPASSをマージ必須条件にはしない。ただし失敗、未実行、既知問題をPRとSTATUSへ明記する。
 
 ## Research
