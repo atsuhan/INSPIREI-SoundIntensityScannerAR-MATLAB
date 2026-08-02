@@ -1,13 +1,15 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.1
+Harness-Version: 1.0.2
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
 ## MUST
 
 - 作業開始時にGit状態を確認し、既存の未コミット変更を壊さない。
+- commitまで行う作業は、実装着手前に `tools/agent-harness/Test-GitWriteAccess.ps1` でGit metadataの書込みを確認する。失敗したまま差分を積み増さず、権限・sandbox・stale lockを先に解決する。
+- `index.lock: Permission denied` をOS権限障害と即断しない。Codexの標準 `workspace-write` は `.git` をread-onlyにするため、trusted projectのPermission Profileが有効かを確認し、それでも失敗する場合だけread-only属性やACLを調べる。
 - 秘密情報、個人情報、顧客データをcommitまたは外部サービスへ送信しない。
 - 検証していない項目をPASS、完了、実機確認済みと報告しない。
 - 実装後に受入条件や検証ゲートを緩めてPASS扱いしない。条件変更が必要なら理由と影響を先に記録する。
@@ -26,6 +28,7 @@ Harness-Version: 1.0.1
 - PRのMERGED状態を確認して基底ブランチを最新化した後、その作業ブランチをローカルとoriginの両方から削除し、`fetch --prune` 後に残っていないことを確認する。
 - 未マージ、保護対象、共有中、別作業、所有者不明のブランチは削除しない。削除対象は完了した自分の作業ブランチに限定する。
 - CIやテストのPASSをマージ必須条件にはしない。ただし失敗、未実行、既知問題をPRとSTATUSへ明記する。
+- `.git/index.lock` はGitプロセスが動いていないこととstaleであることを確認した場合だけ除去する。
 
 ## Research
 

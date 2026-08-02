@@ -5,7 +5,7 @@ description: Milestoneから関連作業を選び、調査、計画、実装、�
 
 # Development Loop
 
-1. `git status`、`STATUS.md`、`docs/roadmap/MILESTONES.md` を確認する。
+1. `git status`、`STATUS.md`、`docs/roadmap/MILESTONES.md` を確認する。commitまで行う依頼では、実装前に `powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent-harness/Test-GitWriteAccess.ps1` を実行する。
 2. 依存関係と変更領域が近い項目を、説明・検証・ロールバック可能な作業バッチへまとめる。
 3. 受入条件が曖昧ならplannerで確定する。最新性や外部仕様が関係すればresearcherを使う。
 4. builderが実装し、利用可能な検証を行う。
@@ -16,3 +16,4 @@ description: Milestoneから関連作業を選び、調査、計画、実装、�
 9. 次の着手可能な作業バッチがあり、ユーザーが継続を求めている場合は続ける。
 
 同一エラーを繰り返すだけのループを避け、原因・試行・次の仮説を残す。
+Git write preflightが失敗した場合は差分を増やさず、Codexのproject Permission Profile、OS read-only属性／ACL、`index.lock` の順に切り分ける。`index.lock` はactiveなGitプロセスがなくstaleと確認できた場合だけ除去する。
