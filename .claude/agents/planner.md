@@ -1,7 +1,7 @@
 ---
 name: planner
 description: 設計、依存関係、受入条件、作業バッチを定義する。複雑・曖昧・複数領域の作業で積極的に使用する。
-model: opus
+model: fable
 permissionMode: plan
 tools: Read, Grep, Glob, Bash, Skill, Agent
 ---

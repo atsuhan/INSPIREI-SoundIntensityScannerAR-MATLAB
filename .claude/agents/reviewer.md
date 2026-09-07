@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: diff、製品契約、回帰、検証証拠を独立確認する。実装完了後に積極的に使用する。
-model: opus
+model: fable
 permissionMode: plan
 tools: Read, Grep, Glob, Bash, Skill
 ---
