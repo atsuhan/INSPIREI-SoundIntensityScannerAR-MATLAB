@@ -1,7 +1,7 @@
 ---
 name: researcher
 description: 公式仕様、一次資料、著名な実装、法令、価格、保守状況を調査する。最新性が関係する作業で積極的に使用する。
-model: opus
+model: fable
 permissionMode: plan
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch, Skill
 ---
