@@ -7,9 +7,9 @@ description: Milestoneから関連作業を選び、調査、計画、実装、�
 
 1. `git status`、`STATUS.md`、`docs/roadmap/MILESTONES.md` を確認する。commitまで行う依頼では、実装前に `powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent-harness/Test-GitWriteAccess.ps1` を実行する。
 2. 依存関係と変更領域が近い項目を、説明・検証・ロールバック可能な作業バッチへまとめる。
-3. 受入条件が曖昧ならplannerで確定する。最新性や外部仕様が関係すればresearcherを使う。
-4. builderが実装し、利用可能な検証を行う。
-5. reviewerが固有契約、diff、回帰、検証証拠を独立確認する。
+3. 受入条件が曖昧ならplannerで確定する。最新性や外部仕様が関係すればresearcherで事実を集め、採否は親またはplannerが決める。
+4. builderが実装し、利用可能な検証を行い、検証証拠を生のまま返す。
+5. reviewerが固有契約、diff、回帰、検証証拠を独立確認し、PASSを判定する。3D・視覚、数値・信号処理、発注・本番ゲートは上位モデルを指定して確認する。
 6. 実装できる範囲は作り切る。別AI、実機、外部権限が必要な調整だけ、具体的な後続項目にする。
 7. MilestoneとSTATUSを更新する。未検証を完了扱いしない。
 8. 関連変更を意図的にstageし、commit、push、ready PR、merge、ローカル同期、今回のマージ済み作業ブランチのローカル・origin削除まで行う。
