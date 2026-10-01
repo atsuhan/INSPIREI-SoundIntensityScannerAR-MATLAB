@@ -8,6 +8,9 @@ function cfg = config()
     % データフォルダ（このプロジェクト内のdata/）
     cfg.dataFolder = fullfile(thisDir, 'data');
 
+    % 出力フォルダ
+    cfg.outputFolder = thisDir;  % プロジェクトルート直下に出力
+
     % 座標変換
     cfg.translateXYZ = [0, 0.85, 0.8];
     cfg.eulerAngles = [8, 0, 0];
