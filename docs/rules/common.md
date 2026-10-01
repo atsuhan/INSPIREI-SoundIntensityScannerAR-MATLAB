@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.2
+Harness-Version: 1.0.4
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
@@ -48,6 +48,9 @@ Harness-Version: 1.0.2
 - `clerk`: 判断を伴わない整理、STATUS生成、機械的更新だけを行う。
 - ノイズの多い調査、ログ解析、テスト実行はsubagentへ分離し、親へ要点だけ返す。
 - 並列writeは競合しない範囲または別worktreeに限定する。
+- 各Agentの既定モデルと推論effortはAgent定義を正本とする。親Agentは、3D・視覚の判定、数値・信号処理・座標系の変更、発注・本番ゲート、同じ指摘が2回解消しない場合に、上位モデルを指定して呼び直してよい。
+- 検証証拠の収集と判定を分ける。`builder` と `clerk` はテスト出力、ログ、スクリーンショット、diffを生のまま集め、PASS判定は `reviewer` が行う。
+- 調査は二段で行う。`researcher` は出典と確認日つきの事実を集め、採否と結論は親Agentまたは `planner` が決める。
 
 ## ルールの柔軟性
 
