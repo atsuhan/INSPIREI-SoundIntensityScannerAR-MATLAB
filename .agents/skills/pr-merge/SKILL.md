@@ -19,3 +19,9 @@ description: 作業を意図的にcommitし、push、ready PR作成、マージ�
 12. 秘密情報、復旧困難な変更、発注、課金、本番操作が含まれる場合は停止して確認する。
 
 `index.lock: Permission denied` の場合、Codex標準の `workspace-write` が `.git` を保護している可能性を先に確認する。trusted projectのPermission Profileでもpreflightが失敗するときだけ、OS属性・ACL・stale lockを調べる。lockはactiveなGitプロセスがなくstaleと確認できた場合だけ除去する。
+
+## 必須レビューゲート
+
+作業入口と範囲変更時に `docs/rules/common.md` の重要判断を分類する。見積・購入構成・採用・設計・数値・視覚・法務財務・セキュリティ権限・発注本番・反復失敗は、上位plannerと別のsenior-reviewerによる独立検収が必須。親の自信や専門Agentの判断で省略しない。
+
+ready化・merge前に `tools/agent-harness/Test-ReviewGate.ps1` で対象revision/hash・モデル実行根拠・独立性・受入範囲を検査する。未実施・不合格・モデル不明では完了チェック、判断確定、ready化、mergeを保留し、保存用commit/push/draft PRまでとする。通常CIの既知失敗を許容する既定は、このゲートを免除しない。詳細は `docs/rules/common.md` と `tools/agent-harness/review-gate.md` に従う。

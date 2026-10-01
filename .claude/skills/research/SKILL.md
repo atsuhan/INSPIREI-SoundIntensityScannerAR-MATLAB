@@ -12,3 +12,9 @@ description: 現行方式と現在の公式仕様、著名な機能・Asset・Li
 5. 新しいという理由だけで採用しない。公式・著名・低リスクで明確な利点があれば導入を推奨できる。
 6. 有力候補、非推奨化、重要な変化は採否にかかわらず報告する。
 7. 将来参照する判断だけ `docs/research/` または `docs/decisions/` に保存する。一時検索結果を蓄積しない。
+
+## 必須レビューゲート
+
+作業入口と範囲変更時に `docs/rules/common.md` の重要判断を分類する。見積・購入構成・採用・設計・数値・視覚・法務財務・セキュリティ権限・発注本番・反復失敗は、上位plannerと別のsenior-reviewerによる独立検収が必須。親の自信や専門Agentの判断で省略しない。
+
+ready化・merge前に `tools/agent-harness/Test-ReviewGate.ps1` で対象revision/hash・モデル実行根拠・独立性・受入範囲を検査する。未実施・不合格・モデル不明では完了チェック、判断確定、ready化、mergeを保留し、保存用commit/push/draft PRまでとする。通常CIの既知失敗を許容する既定は、このゲートを免除しない。詳細は `docs/rules/common.md` と `tools/agent-harness/review-gate.md` に従う。

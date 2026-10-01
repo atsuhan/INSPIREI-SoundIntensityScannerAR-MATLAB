@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.4
+Harness-Version: 1.0.5
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
@@ -27,7 +27,7 @@ Harness-Version: 1.0.4
 - 原則としてcommit、push、ready PR、merge、ローカル同期、マージ済みブランチ削除まで行う。
 - PRのMERGED状態を確認して基底ブランチを最新化した後、その作業ブランチをローカルとoriginの両方から削除し、`fetch --prune` 後に残っていないことを確認する。
 - 未マージ、保護対象、共有中、別作業、所有者不明のブランチは削除しない。削除対象は完了した自分の作業ブランチに限定する。
-- CIやテストのPASSをマージ必須条件にはしない。ただし失敗、未実行、既知問題をPRとSTATUSへ明記する。
+- 通常CIの既知失敗・未実行はPRとSTATUSへ明記する。これは必須レビュー、製品受入、発注・本番ゲートを免除しない。必須ゲートの不合格・未実施・モデル不明ではready PR化・merge・完了チェックを保留する。
 - `.git/index.lock` はGitプロセスが動いていないこととstaleであることを確認した場合だけ除去する。
 
 ## Research
@@ -45,12 +45,28 @@ Harness-Version: 1.0.4
 - `researcher`: 外部情報と代替案をread-onlyで調査し、根拠と確認日を返す。
 - `builder`: 確定した範囲を実装し、関連検証まで行う。
 - `reviewer`: diff、契約、回帰、検証証拠をread-onlyで独立確認する。
+- `senior-reviewer`: Astra／Fableで重要判断と完成成果物を独立検収する。plannerや実装担当の自己承認を代替しない。
 - `clerk`: 判断を伴わない整理、STATUS生成、機械的更新だけを行う。
 - ノイズの多い調査、ログ解析、テスト実行はsubagentへ分離し、親へ要点だけ返す。
 - 並列writeは競合しない範囲または別worktreeに限定する。
-- 各Agentの既定モデルと推論effortはAgent定義を正本とする。親Agentは、3D・視覚の判定、数値・信号処理・座標系の変更、発注・本番ゲート、同じ指摘が2回解消しない場合に、上位モデルを指定して呼び直してよい。
+- 各Agentの既定モデルと推論effortはAgent定義を正本とする。重要判断は下記MUSTゲートに従い、固定モデルのreviewerへの呼出時上書きに依存せず、`senior-reviewer`を使用する。
 - 検証証拠の収集と判定を分ける。`builder` と `clerk` はテスト出力、ログ、スクリーンショット、diffを生のまま集め、PASS判定は `reviewer` が行う。
-- 調査は二段で行う。`researcher` は出典と確認日つきの事実を集め、採否と結論は親Agentまたは `planner` が決める。
+- `researcher` は出典と確認日つきの事実を集める。通常の事実要約は親が行えるが、重要な採否・構成・設計の確定は上位plannerへ渡す。
+
+### 重要判断のMUSTゲート（全入口・全Agent共通）
+
+- 作業開始時と変更範囲が広がった時に、機械処理・事実調査・通常実装・重要判断を分類する。分類未記録または判断に迷う場合は重要判断として扱う。
+- 必須対象: 見積金額・数量・原価・税・期間・購入構成・互換性・購入推奨・技術採用・設計、数値・信号処理・物理量・単位・座標系の正当性、UI・図・3D・形状・配置の視覚判定、法務・財務、セキュリティ・権限・秘密保護、発注・課金・本番操作、同じ問題が2回解消しない作業。判断を伴わない転記・整形は通常処理だが、これらの内容を変えるなら再分類する。
+- 重要判断は事実収集（researcher）→方針確定（planner）→成果物作成（builder等）→独立検収（senior-reviewer）の順序で行う。Codexは`gpt-6-astra`/high、Claudeは`fable`/highを必須モデルとする。既存の十分な一次資料がある場合は再検索を重複させずresearcherが鮮度と不足を確認する。
+- Codexの検収用planner/senior-reviewerは`fork_turns: "none"`で独立起動し、必要な対象・受入条件・証拠パスを明示する。履歴forkで親の古い判定を検収ログへ混ぜない。
+- plannerとsenior-reviewerは別のAgent実行とし、検収者は対象の提案・設計・実装に関与していないことを確認する。親自身が上位モデルでも、確信があっても、小変更でも、専門Agentを使っても省略できない。
+- 見積・資料作成・直接の会話・Research・development-loop・pr-merge・rollout・専門Agent・wrapperの全入口に適用する。専門レビューを検収の代替にするのは、必要モデル、独立性、同じ成果物と受入範囲、実行証跡が全て揃う場合だけ。通常実装も独立reviewerで確認する。
+- レビュー記録は対象commitまたは成果物SHA-256、対象ファイルと受入範囲、作成者・planner・reviewerの実行ID、runtimeで確認したモデルとeffortの根拠、検証結果、未検証、判定を含む。モデルの自己申告や定義ファイルだけでは実行確認にならない。修正後は対象hashと検証を更新し再レビューする。
+- 必須の視覚確認は実際のrender／画像を見た証拠を必要とし、数値は単位と正本・比較基準を確認する。合成／Editor／static証拠で実機・精度・発注／製品受入をPASSにしない。部分バッチの承認を親タスク全体の完了へ流用しない。
+- 上位モデル不在、呼出不可、実体不明、未実施、不合格は「実装済み・完了確認待ち」とする。調査・実装・保存用commit／push／draft PRは可能だが、判断確定・完了チェック・ready PR化・mergeは適格な検収まで行わない。低位モデルへの黙示fallbackは禁止。
+- ready化・merge前に`tools/agent-harness/Test-ReviewGate.ps1`で対象とレビュー記録を照合する。小規模な会話だけの重要提案は親が同じ条件を照合し、レビュー根拠を回答へ示す。検査スクリプトは対応ワークフローのゲートであり、任意のshell操作を強制停止するセキュリティ境界ではない。
+- `project.md`の追加検証・専門家・実機条件を維持する。固有契約を理由に共通の必須上位確認を下げない。上位レビューもユーザーの発注・課金・本番権限を代替しない。
+- 読取り担当には書込みツールを与えない。ClaudeはRead/Grep/Globと必要な閲覧・検索だけとし、Bash/PowerShell/Edit/Write/実行系Skillを禁止する。検証の実行は親・builder等が行い、生の証拠を渡す。Codexはread-onlyの実効sandboxもruntimeで確認し、親のFull accessを理由にread-onlyを保証したと報告しない。
 
 ## ルールの柔軟性
 

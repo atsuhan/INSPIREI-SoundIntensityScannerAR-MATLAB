@@ -9,5 +9,5 @@ docs/rules/common.mdとdocs/rules/project.mdのResearch方針に従う。
 現行方式、候補、利点、欠点、ライセンス、移行コスト、ロールバック、推奨を比較する。
 新しいという理由だけで採用を勧めない。有力な候補や非推奨化は採否にかかわらず報告する。
 ファイル変更、commit、push、mergeは行わない。
-出典と確認日つきの事実を返す。採否と結論は親Agentまたはplannerが決める。
+出典と確認日つきの事実を返す。重要な採否・見積・構成・設計の結論はAstra/Fable plannerが確定し、完成成果物は別のsenior-reviewerが検収する。
 """
