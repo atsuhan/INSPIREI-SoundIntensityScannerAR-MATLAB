@@ -4,40 +4,62 @@
   "reasons": ["design", "permissions"],
   "target": {
     "kind": "artifact",
-    "files": [{"path": "example/product.txt", "sha256": "REPLACE_WITH_SHA256"}]
+    "files": [
+      { "path": "example/product.txt", "sha256": "REPLACE_WITH_SHA256" }
+    ]
   },
-  "author": {"id": "AUTHOR_SESSION_OR_AGENT_ID"},
+  "author": { "id": "AUTHOR_SESSION_OR_AGENT_ID" },
   "planner": {
     "id": "PLANNER_NATIVE_SESSION_ID",
     "platform": "codex",
-    "runtime": {"path": "C:/external-evidence/planner-rollout.jsonl", "sha256": "REPLACE_WITH_SHA256"}
+    "runtime": {
+      "path": "C:/external-evidence/planner-rollout.jsonl",
+      "sha256": "REPLACE_WITH_SHA256"
+    }
   },
   "reviewer": {
     "id": "REVIEWER_NATIVE_SESSION_ID",
     "platform": "codex",
-    "runtime": {"path": "C:/external-evidence/reviewer-rollout.jsonl", "sha256": "REPLACE_WITH_SHA256"}
+    "runtime": {
+      "path": "C:/external-evidence/reviewer-rollout.jsonl",
+      "sha256": "REPLACE_WITH_SHA256"
+    }
   },
   "research": {
     "checkedAt": "2026-10-01",
-    "evidence": {"path": "C:/external-evidence/research.txt", "sha256": "REPLACE_WITH_SHA256"}
+    "evidence": {
+      "path": "C:/external-evidence/research.txt",
+      "sha256": "REPLACE_WITH_SHA256"
+    }
   },
   "planning": {
     "status": "PASS",
-    "evidence": {"path": "C:/external-evidence/planner-rollout.jsonl", "sha256": "REPLACE_WITH_SHA256"}
+    "evidence": {
+      "path": "C:/external-evidence/planner-rollout.jsonl",
+      "sha256": "REPLACE_WITH_SHA256"
+    }
   },
   "review": {
     "status": "PASS",
-    "acceptance": [{"id": "AC-1", "status": "PASS"}],
-    "evidence": {"path": "C:/external-evidence/reviewer-rollout.jsonl", "sha256": "REPLACE_WITH_SHA256"}
+    "acceptance": [{ "id": "AC-1", "status": "PASS" }],
+    "evidence": {
+      "path": "C:/external-evidence/reviewer-rollout.jsonl",
+      "sha256": "REPLACE_WITH_SHA256"
+    }
   },
-  "validations": [{
-    "id": "related-tests",
-    "acceptance": ["AC-1"],
-    "mandatory": true,
-    "status": "PASS",
-    "provenance": "static",
-    "evidence": {"path": "C:/external-evidence/tests.log", "sha256": "REPLACE_WITH_SHA256"}
-  }],
+  "validations": [
+    {
+      "id": "related-tests",
+      "acceptance": ["AC-1"],
+      "mandatory": true,
+      "status": "PASS",
+      "provenance": "static",
+      "evidence": {
+        "path": "C:/external-evidence/tests.log",
+        "sha256": "REPLACE_WITH_SHA256"
+      }
+    }
+  ],
   "unverified": [],
-  "claims": {"device": false}
+  "claims": { "device": false }
 }
