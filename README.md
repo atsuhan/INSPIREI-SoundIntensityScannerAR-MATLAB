@@ -63,6 +63,23 @@ projects/{計測名}/
 
 `projects/example/` をコピーして編集するのが最も簡単です。
 
+## テストの実行
+
+`tests/` 以下に `test*.m` という名前のテスト関数を置き、`runAllTests` で一括実行する。
+
+```matlab
+addpath('tests');
+runAllTests
+```
+
+Octaveからコマンドラインで実行する場合（`startup.m` は起動時に自動実行される）:
+
+```bash
+octave --no-gui --eval "addpath('tests'); runAllTests"
+```
+
+1件でもFAILがあれば `runAllTests` は非0の終了コードで終わる。
+
 ## 必要なToolbox
 
 - Aerospace Toolbox（quatrotate, quatmultiply）

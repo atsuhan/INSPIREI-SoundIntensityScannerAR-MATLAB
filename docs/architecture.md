@@ -21,10 +21,10 @@ SISAR/
 │   │   ├── applyRotation.m      # オイラー角ベースの回転
 │   │   ├── eulerToQuat.m        # オイラー角→クォータニオン変換
 │   │   └── filterPoints.m       # 条件関数でフィルタリング
-│   ├── acoustic/                # 音響計算（今後追加）
-│   │   ├── calcIntensity.m
-│   │   ├── calcCrossSpectrum.m
-│   │   └── calcSoundPressure.m
+│   ├── acoustic/                # 音響計算
+│   │   ├── calcCrossSpectrum.m  # Welch法クロススペクトル推定（実装済み）
+│   │   ├── calcIntensityPair.m  # p-p法ペア軸方向インテンシティ（実装済み）
+│   │   └── calcIntensityVector.m # 4ch→3Dベクトル（今後追加, P1-4）
 │   └── vis/                     # 可視化
 │       ├── plotScatter3d.m      # 3Dスキャッタープロット
 │       ├── plotVectorField.m    # ベクトル場表示
