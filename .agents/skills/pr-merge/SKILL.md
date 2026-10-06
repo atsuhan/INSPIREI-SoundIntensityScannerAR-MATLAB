@@ -5,6 +5,10 @@ description: 作業を意図的にcommitし、push、ready PR作成、マージ�
 
 # PR and Merge
 
+人間宛のメール・メッセージ・公開コメント・通知は、送信前に宛先/公開範囲・全文・添付等を提示し、プレビュー後のユーザー本人の明示承認を各送信ごとに待つ。包括指示・過去承認・自動承認・reviewer承認で代替しない。変更や再送は再承認。draft PRも公開/通知であり対象。詳細は `docs/rules/common.md` の「人間への送信前確認」に従う。
+
+公開・通知の承認がない間はローカル準備で止める。自走や保存用draft PRの規定は送信承認を免除しない。
+
 1. `git status` とdiffを確認し、対象外のユーザー変更を含めない。続けて `powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent-harness/Test-GitWriteAccess.ps1` を実行し、commit前ではなく作業バッチの入口でGit書込み可否を確定する。
 2. 利用可能な検証を実行し、PASS、FAIL、未実行、未検証を記録する。
 3. 関連作業を説明・検証・ロールバック可能なPRへまとめる。
@@ -20,8 +24,6 @@ description: 作業を意図的にcommitし、push、ready PR作成、マージ�
 
 `index.lock: Permission denied` の場合、Codex標準の `workspace-write` が `.git` を保護している可能性を先に確認する。trusted projectのPermission Profileでもpreflightが失敗するときだけ、OS属性・ACL・stale lockを調べる。lockはactiveなGitプロセスがなくstaleと確認できた場合だけ除去する。
 
-## 必須レビューゲート
+## レビューと検証
 
-作業入口と範囲変更時に `docs/rules/common.md` の重要判断を分類する。見積・購入構成・採用・設計・数値・視覚・法務財務・セキュリティ権限・発注本番・反復失敗は、上位plannerと別のsenior-reviewerによる独立検収が必須。親の自信や専門Agentの判断で省略しない。
-
-ready化・merge前に `tools/agent-harness/Test-ReviewGate.ps1` で対象revision/hash・モデル実行根拠・独立性・受入範囲を検査する。未実施・不合格・モデル不明では完了チェック、判断確定、ready化、mergeを保留し、保存用commit/push/draft PRまでとする。通常CIの既知失敗を許容する既定は、このゲートを免除しない。詳細は `docs/rules/common.md` と `tools/agent-harness/review-gate.md` に従う。
+通常の差分レビューと変更に応じた検証を行う。上位モデル、planner、senior-reviewer、専門Agent、厳密な証跡照合は難度・リスクに応じて任意に選ぶ。二重検収、特定モデル・high effort、実効read-onlyやnativeログ・画像閲覧証跡・成果物hashの機械照合、Test-ReviewGate成功は判断確定・完了・ready PR化・mergeの必須条件ではなく、その未成立だけで保留しない。秘密保護、破壊的操作の権限確認、既存変更の保全、製品固有契約、未検証をPASSにしない規則は維持する。
