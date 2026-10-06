@@ -1,3 +1,4 @@
+# Optional strict record checker since Harness 1.0.7; never a standard ready PR/merge prerequisite.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$RecordPath,
@@ -119,6 +120,38 @@ function IsImage([byte[]]$Bytes) {
     if ($Bytes.Length -lt 12) { return $false }
     $hex = [BitConverter]::ToString($Bytes[0..11])
     if (-not ($hex.StartsWith('89-50-4E-47-0D-0A-1A-0A') -or $hex.StartsWith('FF-D8-FF') -or $hex.StartsWith('47-49-46-38-37-61') -or $hex.StartsWith('47-49-46-38-39-61'))) { return $false }
+    # ArgumentList is used only on macOS; Windows PowerShell 5 retains GDI+ below.
+    if ([Environment]::OSVersion.Platform -eq [PlatformID]::Unix -and (Test-Path -LiteralPath '/System/Library/Frameworks/AppKit.framework')) {
+        $temp = Join-Path ([IO.Path]::GetTempPath()) ('inspirei-image-' + [guid]::NewGuid().ToString('N'))
+        $process = $null
+        try {
+            if (-not (Test-Path -LiteralPath '/usr/bin/osascript' -PathType Leaf)) { return $false }
+            [IO.File]::WriteAllBytes($temp, $Bytes)
+            $helper = 'ObjC.import("AppKit"); function run(argv) { try { var data = $.NSData.dataWithContentsOfFile(argv[0]); var rep = $.NSBitmapImageRep.imageRepWithData(data); if (rep.isNil()) return "invalid"; var raster = rep.TIFFRepresentation; if (raster.isNil() || raster.length <= 0) return "invalid"; return rep.pixelsWide > 0 && rep.pixelsHigh > 0 ? "valid" : "invalid"; } catch (error) { return "invalid"; } }'
+            $start = New-Object Diagnostics.ProcessStartInfo
+            $start.FileName = '/usr/bin/osascript'
+            $start.UseShellExecute = $false
+            $start.RedirectStandardOutput = $true
+            $start.RedirectStandardError = $true
+            foreach ($argument in @('-l','JavaScript','-e',$helper,$temp)) { $start.ArgumentList.Add($argument) }
+            $process = New-Object Diagnostics.Process
+            $process.StartInfo = $start
+            if (-not $process.Start()) { return $false }
+            $stdout = $process.StandardOutput.ReadToEndAsync()
+            $stderr = $process.StandardError.ReadToEndAsync()
+            if (-not $process.WaitForExit(10000)) { $process.Kill(); $process.WaitForExit(1000) | Out-Null; return $false }
+            # Stream draining is separately bounded, including inherited handles.
+            if (-not $stdout.Wait(1000) -or -not $stderr.Wait(1000)) { return $false }
+            return $process.ExitCode -eq 0 -and [string]::IsNullOrEmpty($stderr.Result) -and $stdout.Result.TrimEnd("`r", "`n") -ceq 'valid'
+        } catch { return $false }
+        finally {
+            if ($process) {
+                try { if (-not $process.HasExited) { $process.Kill(); $process.WaitForExit(1000) | Out-Null } } catch { }
+                $process.Dispose()
+            }
+            if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force }
+        }
+    }
     $stream = $null
     $decoded = $null
     try {
@@ -141,10 +174,36 @@ function ImageResult($Content) {
     }
     return $false
 }
+function OriginalImageResult($Content, [string]$ExpectedHash) {
+    if ($Content -is [string]) { try { $Content = $Content | ConvertFrom-Json } catch { return $false } }
+    if ($Content.isError -eq $true -or $Content.is_error -eq $true) { return $false }
+    $images = @($Content | Where-Object { $_.type -in @('input_image','image') })
+    if ($images.Count -ne 1) { return $false }
+    foreach ($item in @($Content)) {
+        if ($item.isError -eq $true -or $item.is_error -eq $true -or ($item.type -eq 'input_text' -and $item.text -match '^Script failed')) { return $false }
+    }
+    $encoded = $null
+    $item = $images[0]
+    if ($item.source.type -eq 'base64') { $encoded = $item.source.data }
+    elseif ($item.image_url -is [string] -and $item.image_url -match '^data:image/[^;]+;base64,(.+)$') { $encoded = $Matches[1] }
+    elseif ($item.data -and $item.mimeType -like 'image/*') { $encoded = $item.data }
+    if (-not $encoded) { return $false }
+    try {
+        $bytes = [Convert]::FromBase64String($encoded)
+        if (-not (IsImage $bytes)) { return $false }
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try { $hash = [BitConverter]::ToString($sha.ComputeHash($bytes)).Replace('-','').ToLowerInvariant() }
+        finally { $sha.Dispose() }
+        return $hash -ceq $ExpectedHash
+    } catch { return $false }
+}
 function ViewedImage([string]$ImagePath) {
     $expectedPath = (FullPath $ImagePath).Replace('\','/')
     if (-not (IsImage ([IO.File]::ReadAllBytes((FullPath $ImagePath))))) { return $false }
-    $calls = @{}
+    # Native call IDs are opaque and case-sensitive across all supported routes.
+    $calls = [Collections.Hashtable]::new([StringComparer]::Ordinal)
+    $customCalls = [Collections.Hashtable]::new([StringComparer]::Ordinal)
+    $expectedHash = Hash (FullPath $ImagePath)
     $events = @($script:runtimeEvents['reviewer'])
     $end = $script:decisionIndices['reviewer']
     if ($null -eq $end) { return $false }
@@ -158,6 +217,21 @@ function ViewedImage([string]$ImagePath) {
         if ($event.type -eq 'response_item' -and $event.payload.type -eq 'function_call' -and $event.payload.name -match '(^|\.)view_image$') {
             $argsObject = $event.payload.arguments | ConvertFrom-Json
             if ($event.payload.call_id -and $argsObject.path -and (FullPath $argsObject.path).Replace('\','/') -ieq $expectedPath) { $calls[$event.payload.call_id] = $true }
+        }
+        if ($event.type -eq 'response_item' -and $event.payload.type -eq 'custom_tool_call' -and $event.payload.name -ceq 'exec') {
+            # Recognize syntax, never execute JavaScript. Only whitespace may vary.
+            $template = '\A\s*const\s+result\s*=\s*await\s+tools\.view_image\(\s*\{\s*path\s*:\s*("(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")\s*,\s*detail\s*:\s*"original"\s*\}\s*\)\s*;\s*image\(\s*result\.image_url\s*\)\s*;\s*\z'
+            if (-not [string]::IsNullOrWhiteSpace($event.payload.call_id) -and $event.payload.input -cmatch $template) {
+                $pathLiteral = $Matches[1]
+                try { $customPath = ConvertFrom-Json -InputObject $pathLiteral } catch { continue }
+                $id = $event.payload.call_id
+                $callCount = @($events | Where-Object { $_.type -eq 'response_item' -and $_.payload.type -in @('custom_tool_call','function_call') -and $_.payload.call_id -ceq $id }).Count
+                $resultCount = @($events | Where-Object { $_.type -eq 'response_item' -and $_.payload.type -in @('custom_tool_call_output','function_call_output') -and $_.payload.call_id -ceq $id }).Count
+                if ($callCount -eq 1 -and $resultCount -eq 1 -and (FullPath $customPath).Replace('\','/') -ieq $expectedPath) { $customCalls[$id] = $true }
+            }
+        }
+        if ($event.type -eq 'response_item' -and $event.payload.type -eq 'custom_tool_call_output' -and $event.payload.call_id -and $customCalls[$event.payload.call_id]) {
+            if (OriginalImageResult $event.payload.output $expectedHash) { return $true }
         }
         if ($event.type -eq 'user') {
             foreach ($result in @($event.message.content | Where-Object { $_.type -eq 'tool_result' })) {

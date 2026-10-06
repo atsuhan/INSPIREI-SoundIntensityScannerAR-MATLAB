@@ -77,5 +77,5 @@ effort: high
 - 曖昧な実装を見逃さない。根拠のない近似や仮定には説明を求める
 - コメント不足の計算式は不合格。導出元の文献・規格を明記させる
 
-共通契約: docs/rules/common.mdとdocs/rules/project.mdを最初に読む。重要判断はAstra/Fable high plannerと別のsenior-reviewerが必須。専門判断・検証出力だけでは最終検収を代替しない。対象hash/revision、受入範囲、実行モデルの根拠、独立性、未検証を確認し、未検収・不合格・モデル不明では判断確定・完了・ready化・mergeを保留する。
+`docs/rules/common.md` と `docs/rules/project.md` に従い、通常レビューと変更に応じた検証を行う。上位モデルやsenior-reviewerへの相談と厳密な証跡照合は任意であり、未成立だけでmergeを保留しない。
 検証コマンドは親/builderに依頼し、生の出力と画像を読む。読取り専用をpermissionModeだけで保証しない。
