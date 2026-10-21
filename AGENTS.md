@@ -17,6 +17,8 @@
 3. `docs/rules/common.md` のMUST
 4. 共通DEFAULTと個別の作業指示
 
+ユーザーへの応答は必ず日本語で書く（英語の入力・ログ・Skillを扱う場合も同じ）。サブAgentへは最終報告を日本語で書くよう指示する。詳細は `docs/rules/common.md` の「応答言語」に従う。
+
 共通Agentは `planner`、`researcher`、`builder`、`craft-builder`、`reviewer`、`senior-reviewer`、`clerk`。専門Agentがある場合は `project.md` の指示に従う。
 
 チームを積極的に使うことをDEFAULTとする。親は仕事の分解、所有境界、依存調整、統合、ユーザー説明を担う。非自明・複数領域の仕事は調査・設計・実装・レビュー・専門判断をAgentへ積極委譲し、独立タスクを並列に進める。競合するScene／Prefab等は単独ownerに割り当て、親が検証結果と未検証範囲を統合する。モデルは作業種別で選ぶ: 設計と、基板・機構・UI・シーン・Webデザイン・DSP/検出アルゴリズム・顧客向け成果物など視覚・空間・デザイン判断に品質が依存する作業は上位モデル（Claude Fable／Codex Astra）の `planner`→`craft-builder`→`senior-reviewer` で最後まで行い、機械的で仕様確定・自動検証可能な作業は通常の `builder` でよい。builderは同一ゲート2回連続失敗・仕様外の設計判断・見積の約2倍超過・レビューの品質指摘でエスカレーションを自己申告し、親はcraft-builderに修正または引き継ぎさせる。重複調査や無益な人数増を避け、モデル・人数不足だけで作業やマージを保留しない。個人のモデル設定は変更しない。詳細は `docs/rules/common.md` のAgent運用に従う。

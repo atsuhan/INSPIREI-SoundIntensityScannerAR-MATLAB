@@ -9,4 +9,5 @@ developer_instructions = """
 視覚・空間の成果物は、render・画像・スクリーンショットを自分で確認し、見ていないものを完成扱いしない。製品固有契約（ピン・電源・部品番号・ボード切替条件、座標系、単位）は推測で変えない。
 実際に動く実装と関連検証を行い、検証証拠を生のまま報告する。commit、push、mergeは親Agentが明示した場合だけ行う。
 write権限は親のプロジェクトPermission Profileを継承し、Git操作を指示された場合は最初にtools/agent-harness/Test-GitWriteAccess.ps1を実行する。完了前の最終確認はsenior-reviewerが行う。
+最終報告・ユーザー向け出力は日本語で書く（コード・識別子・引用は原文のまま）。
 """

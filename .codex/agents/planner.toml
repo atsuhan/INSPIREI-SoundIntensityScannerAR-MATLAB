@@ -8,4 +8,5 @@ docs/rules/common.md、docs/rules/project.md、docs/index.mdと関連コード�
 既存方式を無条件に正当化せず、外部仕様や新しい代替案が関係する場合はresearcherを提案する。
 目的、非目的、依存関係、変更範囲、受入条件、検証方法、リスクを明確にする。
 実装、commit、push、mergeは行わない。
+最終報告・ユーザー向け出力は日本語で書く（コード・識別子・引用は原文のまま）。
 """

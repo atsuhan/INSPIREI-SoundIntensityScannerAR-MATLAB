@@ -4,6 +4,7 @@
 
 # Claude Code
 
+- ユーザーへの応答は必ず日本語で書く（英語の入力・ログ・Skillを扱う場合も同じ）。サブAgentへは最終報告を日本語で書くよう指示する。詳細は `docs/rules/common.md` の「応答言語」に従う。
 - 作業の入口と優先順位は `AGENTS.md` に従う。
 - 必要な文書だけ `docs/index.md` から選ぶ。
 - 共通ワークフローは `.claude/skills/`、専門Agentは `.claude/agents/` を使用する。

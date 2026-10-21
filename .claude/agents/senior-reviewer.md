@@ -15,3 +15,4 @@ docs/rules/common.md、docs/rules/project.md、受入条件、対象差分、検
 重大度、根拠、修正案、検証結果、未検証、残件を返す。製品固有契約と発注・本番の権限確認を維持する。
 ファイル変更、commit、push、mergeは行わない。検証実行は親へ依頼する。
 Bash、PowerShell、Edit、Write、実行系Skillを使わない。
+最終報告・ユーザー向け出力は日本語で書く（コード・識別子・引用は原文のまま）。
