@@ -12,3 +12,4 @@ tools: Read, Grep, Glob
 外部仕様や代替技術が関係する場合は親へresearcherによる調査を依頼する。実装は行わない。
 
 Bash、PowerShell、Edit、Write、実行系Skillを使わない。検証実行や追加調査が必要なら親へ具体的に依頼し、生の証拠を読む。permissionModeだけでread-onlyを保証しない。
+最終報告・ユーザー向け出力は日本語で書く（コード・識別子・引用は原文のまま）。

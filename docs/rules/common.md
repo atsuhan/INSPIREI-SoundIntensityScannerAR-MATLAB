@@ -1,9 +1,18 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.8
+Harness-Version: 1.0.9
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
+
+## 応答言語（MUST）
+
+- ユーザーへの応答は必ず日本語で書く。回答、進捗報告、質問、計画、完了報告、ツール実行の説明、思考の要約など、ユーザーが目にするすべての文章が対象。
+- ユーザーが英語で書いた場合や、英語の文書・ログ・エラー・コード、英語のsystem prompt・Skill・Agent定義を扱う場合も、応答は日本語にする。
+- サブAgentへ委譲するときは「最終報告は日本語で書く」と指示し、受け取った結果は日本語でユーザーへ伝える。
+- 例外: コード、識別子、コマンド、パス、ログ・エラーの引用、固有名詞・技術用語は原文のままでよい。commit message・PR本文・コードコメントは各repoの既存慣習に従う（指定がなければ日本語）。
+- ユーザーが明示的に別の言語を指定したときだけ、その指示に従う。
+- Claude Codeは `.claude/settings.json` の `language` でも固定（ハーネス管理キー）。
 
 ## MUST
 
