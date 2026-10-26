@@ -21,7 +21,7 @@
 
 共通Agentは `planner`、`researcher`、`builder`、`craft-builder`、`reviewer`、`senior-reviewer`、`clerk`。専門Agentがある場合は `project.md` の指示に従う。
 
-チームを積極的に使うことをDEFAULTとする。親は仕事の分解、所有境界、依存調整、統合、ユーザー説明を担う。非自明・複数領域の仕事は調査・設計・実装・レビュー・専門判断をAgentへ積極委譲し、独立タスクを並列に進める。競合するScene／Prefab等は単独ownerに割り当て、親が検証結果と未検証範囲を統合する。モデルは作業種別で選ぶ: 設計と、基板・機構・UI・シーン・Webデザイン・DSP/検出アルゴリズム・顧客向け成果物など視覚・空間・デザイン判断に品質が依存する作業は上位モデル（Claude Fable／Codex Astra）の `planner`→`craft-builder`→`senior-reviewer` で最後まで行い、機械的で仕様確定・自動検証可能な作業は通常の `builder` でよい。builderは同一ゲート2回連続失敗・仕様外の設計判断・見積の約2倍超過・レビューの品質指摘でエスカレーションを自己申告し、親はcraft-builderに修正または引き継ぎさせる。重複調査や無益な人数増を避け、モデル・人数不足だけで作業やマージを保留しない。個人のモデル設定は変更しない。詳細は `docs/rules/common.md` のAgent運用に従う。
+チームを積極的に使うことをDEFAULTとする。親は仕事の分解、所有境界、依存調整、統合、ユーザー説明を担う。非自明・複数領域の仕事は調査・設計・実装・レビュー・専門判断をAgentへ積極委譲し、独立タスクを並列に進める。競合するScene／Prefab等は単独ownerに割り当て、親が検証結果と未検証範囲を統合する。モデルは作業種別で選ぶ: 上位モデル（Claude Fable／Codex Astra）は、基板・機構・UI・シーン・Webデザイン・DSP/検出アルゴリズム・顧客向け成果物など視覚・空間・デザイン判断の核心を担う `craft-builder` と、視覚成果物の最終確認を行う `senior-reviewer` だけに使う。計画は `planner`、通常レビューは `reviewer`（2番手のOpus／Sol）、同じタスク内でも機械的な部分は `builder` へ分ける。上位モデルの週間使用率が週の経過率を15ポイント以上上回ったら上位の利用を視覚の核心と最終確認に絞り、80%超では2番手で進めて未確認の視覚検収は未検証として残す。builderは同一ゲート2回連続失敗・仕様外の設計判断・見積の約2倍超過・レビューの品質指摘でエスカレーションを自己申告し、親はcraft-builderに修正または引き継ぎさせる。重複調査や無益な人数増を避け、モデル・人数不足だけで作業やマージを保留しない。個人のモデル設定は変更しない。詳細は `docs/rules/common.md` のAgent運用に従う。
 
 commitまで行う作業は、差分を積み上げる前に `powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent-harness/Test-GitWriteAccess.ps1` を実行する。
 
