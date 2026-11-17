@@ -11,18 +11,20 @@
 ## P1: WAV対応 — 4ch WAVファイルからインテンシティ計算 〔未定〕
 **Goal:** 4ch WAVファイルを読み込み、クロススペクトル法で音響インテンシティを計算し、3Dベクトル場として可視化できる
 
-- [ ] **P1-1** Octave/MATLAB 両対応のテスト基盤と loadWav4ch の往復テスト ｜優先:高｜複雑度:2｜依存:-｜並行:可
+- [x] **P1-1** Octave/MATLAB 両対応のテスト基盤と loadWav4ch の往復テスト ｜優先:高｜複雑度:2｜依存:-｜並行:可
   - 詳細: `tests/runAllTests.m`（`tests/test*.m` を列挙し try/catch で PASS/FAIL を集計、失敗があれば error で終了）と `tests/testLoadWav4ch.m`（tempdir に 4ch WAV を audiowrite → loadWav4ch → `[4 x N]`・fs・値の一致を確認、非4chでの error を確認、後始末）。テストは関数ファイル＋ `assert(cond, msg)` のみ
   - 受け入れ条件: `octave --no-gui --eval "addpath('tests'); runAllTests"` が終了コード0で全PASS ／ `loadWav4ch` の入出力契約（`[4 x N]`, fs）は無変更
   - 検証: 上記 Octave コマンド。MATLAB では `runAllTests` と `checkcode` を未実行として記録
   - 触るファイル: tests/runAllTests.m（新規）, tests/testLoadWav4ch.m（新規）, README.md（テスト実行手順1節）
   - 確認済み: `loadWav4ch` は audioread の正規化値（Pa換算なし）を転置して返す。`audioread/audiowrite` は Octave core。検証環境は GNU Octave 8.4.0（2026-09-27 時点、MATLAB 未導入）
+  - メモ: 2026-11-17 整理: `[x]` へ変更。根拠は commit 9f24ee3（merge 2e47b8c・PR #8 統合）で tests/runAllTests.m・tests/testLoadWav4ch.m が main に存在し、2026-11-17 に MATLAB R2025b で `startup; addpath('tests'); runAllTests` を実行して 3 PASS / 0 FAIL。受け入れ条件の Octave 実行は Octave 未導入のため未実施。
 - [ ] **P1-2** calcCrossSpectrum / calcIntensityPair — p-p法によるペア軸方向インテンシティ ｜優先:高｜複雑度:4｜依存:P1-1｜並行:不可
   - 詳細: `functions/acoustic/calcCrossSpectrum.m`（Welch 平均・周期 Hann 窓を自前生成・50% overlap・片側・窓パワー補正・Toolbox非依存）と `functions/acoustic/calcIntensityPair.m`（`I_r(f) = -Im{G12(f)} / (rho * 2*pi*f * micInterval)`、G12 = mean(conj(P1).*P2)、正方向 = mic1→mic2）。帯域積算値と dB（re 1e-12 W/m²、符号は別出力）を返す。式の導出元（Fahy "Sound Intensity" / ISO 9614-1）をコメントに明記
   - 受け入れ条件: `runAllTests` 全PASS（合成平面波: 有限差分補正 sin(k dr)/(k dr) 込みで理論値との相対誤差 <1%、補正なしで <5%、垂直入射で |I_r| < 1e-3×軸方向値、ch入替で符号反転、Gxx の総和 ≈ mean(x.^2) 相対誤差 <1%、Gyx == conj(Gxy)）／ professor 審査「合格」または「条件付き合格」の記録 ／ `rho`, `c`, `micInterval`, 帯域は引数（ハードコード禁止）
   - 検証: Octave で `runAllTests`。MATLAB では `cpsd(p1,p2)` との符号・スケール一致を未検証として記録。professor 招集（物理量・符号・窓・上限周波数）
   - 触るファイル: functions/acoustic/calcCrossSpectrum.m（新規）, functions/acoustic/calcIntensityPair.m（新規）, tests/testCalcCrossSpectrum.m（新規）, tests/testCalcIntensityPair.m（新規）
   - 確認済み: `functions/acoustic/` は未作成（architecture.md に予定名のみ）。Octave で `cpsd`/`hann` は signal パッケージ依存のため自前実装が必要。既存関数はいずれも `[4 x N]` 行=ch 契約
+  - メモ: 2026-11-17 整理: 実装とテスト（calcCrossSpectrum / calcIntensityPair・各 test）は main へ統合済み（commit 9f24ee3, af2ffb1）。MATLAB R2025b で runAllTests 3 PASS を確認。ただし受け入れ条件の professor 審査記録と MATLAB `cpsd` との符号・スケール一致確認が未確認のため未完了を維持（判断保留）。
 - [ ] **P1-3** calcAirProperties — 気温・気圧から rho と c を算出 ｜優先:中｜複雑度:1｜依存:P1-2｜並行:可
   - 詳細: `functions/acoustic/calcAirProperties.m`: 入力 temperature [°C], pressure [hPa] → rho = p/(R_s T)（R_s=287.05 J/(kg K), p は Pa 換算）, c = 331.3*sqrt(1+T/273.15) [m/s]。`loadSetting` の `.temperature/.pressure` をそのまま渡せる
   - 受け入れ条件: `runAllTests` 全PASS（20°C/1013.25 hPa で rho=1.204±0.005, c=343.2±0.5）／ professor 審査
