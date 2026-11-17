@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.12
+Harness-Version: 1.0.13
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
