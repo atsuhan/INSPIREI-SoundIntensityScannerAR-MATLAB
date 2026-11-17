@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.13
+Harness-Version: 1.0.14
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
@@ -145,4 +145,5 @@ Harness-Version: 1.0.13
 
 - どのrepoからでも `notion` Skillで、Notionの「タスク」DBへタスクを登録・更新し、「資料」DBへ共有用の文書を載せられる。DBの構成の正本は INSPIREI-Manager の `.claude/notion-structure.md`。
 - repoの作業台帳は引き続き `docs/roadmap/MILESTONES.md`、文書の正本はrepo。Notionは見える化・期限管理・共有用の写しとし、載せるときは `関連`／`正本` 欄にrepo名・パス・ID・commitを書いて二重管理にしない。
+- 開発タスク（MILESTONESのID）はタスクDBに1件ずつ行を作らず、プロジェクトごとの「常時対応」カードの本文に全件を書く。事務・案件・個人のタスクを埋もれさせない。
 - Notion上のコメント・mention・共有・公開は「人間への送信前確認」に従う。
