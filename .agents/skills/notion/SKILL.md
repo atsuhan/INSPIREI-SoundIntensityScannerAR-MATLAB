@@ -16,6 +16,7 @@ description: どのrepoからでもNotionの「タスク」DBへタスクを登�
 | 議事録（参照のみ） | `collection://eb0066b1-4c1c-43cd-bc57-94abb4fffc3c` | https://app.notion.com/p/bff06017eab74f32aa4e9b0f3cd854e8 |
 
 「Claude担当」ビュー: `view://41aa52d4-b90d-8135-82e5-000c036dee4c`（担当=Claude かつ未完了）。
+プロジェクト別ビュー（未完了、`自走` でグループ）: OTOMIRU `view://41ba52d4-b90d-81bc-8d18-000c87580ccc`、SISAR `view://41ba52d4-b90d-81b1-8227-000cd7350a19`、東京ガス `view://41ba52d4-b90d-8137-8b3d-000c0ed3d80d`。
 
 ## 前提
 
@@ -48,6 +49,9 @@ description: どのrepoからでもNotionの「タスク」DBへタスクを登�
    - `完了条件`: 何をもって終わりか。工程ごとに（井上）（Claude）を付ける
    - `関連`: このrepo名と、関係するパス・`docs/roadmap/MILESTONES.md` のID・PR番号（例 `INSPIREI-OTOMIRU-Unity MILESTONES FTR-29d / PR #1381`）
    - `GitHub Issue`: 関係するIssueがあるときだけURL
+   - `自走`: `自走可`（repo内の実装・文書・テストで完了し、受け入れ条件をAgentが検証できる）／`一部自走`（準備・実装はAgentが進められるが、完了判定に実機・目視・井上確認が要る）／`要人手`（発注・現場・実機計測・外部回答・井上の裁定が先に要る）
+   - `自走メモ`: 自走可以外は、人が要る理由を1文
+   - `起票元`: `MILESTONES`（repoの台帳にIDがある）／`Notion`（Notionで起票）／`GitHub Issue`。MILESTONESにあるなら `タスクID` にID、`repo` にrepo名を入れる
 4. 開発タスクの扱い: repoの作業台帳は引き続き `docs/roadmap/MILESTONES.md` が正本。ユーザーがNotionへの登録を求めたときだけNotionに作り、`関連` にMILESTONESのIDを書いて二重管理にしない（中身はMILESTONES、Notionは見える化と期限管理）。
 5. 報告: タイトル・期限・担当・NotionのURLを1行ずつ。
 
@@ -56,6 +60,7 @@ description: どのrepoからでもNotionの「タスク」DBへタスクを登�
 - 作業開始時に「Claude担当のタスクを拾って」と言われたら、「Claude担当」ビューを `notion-query-data-sources`（view モード）で読み、このrepoのプロジェクトに当たるものを示す。
 - 完了時: `ステータス` を「完了」にし、本文末尾に `YYYY-MM-DD 完了: 何をしたか・成果物のパス／PR` を1行追記する。人の工程が残るなら「待ち」にして担当を井上へ。
 - スマホからタイトルだけ入ったタスク（担当・プロジェクトが空）は、気づいたら欄を埋める。
+- `起票元=MILESTONES` のタスクは、repoでタスクを完了・保留・改題したら、同じ `タスクID`＋`repo` のNotion行も更新する（MILESTONESが正本）。新しく起票したMILESTONESタスクは、ユーザーが求めたとき、またはプロジェクト別に整理するときに同じ形式で登録する。重複を避けるため、作成前に `repo`＋`タスクID` で既存行を探す。
 
 ## C. 資料（ドキュメント）にする
 
