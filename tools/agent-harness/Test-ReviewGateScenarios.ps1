@@ -25,9 +25,9 @@ function Fixture([string]$Reason = 'design', [string]$Class = 'important') {
     $decision = @{status='PASS';authorId='author-1';plannerId='planner-1';acceptance=@('A-1');target=$target}
     $reviewLog = Join-Path $sandbox 'reviewer.jsonl'
     $plannerLog = Join-Path $sandbox 'planner.jsonl'
-    $model = if ($Class -eq 'ordinary') { 'gpt-6.1-sol' } else { 'gpt-6-astra' }
+    $model = if ($Class -eq 'ordinary') { 'gpt-6.2-sol' } else { 'gpt-6.2-astra' }
     NativeLog $reviewLog 'reviewer-1' $model ('REVIEW_GATE_RESULT: ' + ($decision | ConvertTo-Json -Depth 12 -Compress))
-    NativeLog $plannerLog 'planner-1' 'gpt-6-astra' ('PLAN_GATE_RESULT: ' + (@{status='PASS';acceptance=@('A-1');scopeFiles=@('product.txt')} | ConvertTo-Json -Compress))
+    NativeLog $plannerLog 'planner-1' 'gpt-6.2-astra' ('PLAN_GATE_RESULT: ' + (@{status='PASS';acceptance=@('A-1');scopeFiles=@('product.txt')} | ConvertTo-Json -Compress))
     return @{
         schemaVersion=1; classification=$Class; reasons=@($Reason); target=$target;
         author=@{id='author-1'};reviewer=@{id='reviewer-1';platform='codex';runtime=(Ref $reviewLog)};
@@ -71,11 +71,11 @@ try {
     Case 'unknown classification defaults mandatory' $false { param($r) $r.classification=$null }
     Case 'ordinary cannot weaken mandatory invocation' $false {} 'routine' 'ordinary'
     Case 'model alias/self assertion cannot replace native model' $false { param($r)
-        NativeLog $r.reviewer.runtime.path 'reviewer-1' 'gpt-6.1-sol' 'I am Astra/high; PASS'
+        NativeLog $r.reviewer.runtime.path 'reviewer-1' 'gpt-6.2-sol' 'I am Astra/high; PASS'
         $r.reviewer.runtime=Ref $r.reviewer.runtime.path
     }
     Case 'unrelated native smoke log cannot approve target' $false { param($r)
-        NativeLog $r.reviewer.runtime.path 'reviewer-1' 'gpt-6-astra' 'PASS'
+        NativeLog $r.reviewer.runtime.path 'reviewer-1' 'gpt-6.2-astra' 'PASS'
         $r.reviewer.runtime=Ref $r.reviewer.runtime.path
     }
     Case 'missing runtime file' $false { param($r) $r.reviewer.runtime.path=Join-Path $sandbox 'missing.jsonl' }
@@ -394,8 +394,8 @@ try {
             $decisions += 'REVIEW_GATE_RESULT: ' + (@{status='PASS';repositoryId=$id;authorId=$r.author.id;plannerId=$r.planner.id;acceptance=@('A-1');target=$r.target} | ConvertTo-Json -Depth 15 -Compress)
             $plans += 'PLAN_GATE_RESULT: ' + (@{status='PASS';repositoryId=$id;acceptance=@('A-1');scopeFiles=@('product.txt')} | ConvertTo-Json -Compress)
         }
-        NativeLog $r.reviewer.runtime.path 'reviewer-1' 'gpt-6-astra' ($decisions -join "`n")
-        NativeLog $r.planner.runtime.path 'planner-1' 'gpt-6-astra' ($plans -join "`n")
+        NativeLog $r.reviewer.runtime.path 'reviewer-1' 'gpt-6.2-astra' ($decisions -join "`n")
+        NativeLog $r.planner.runtime.path 'planner-1' 'gpt-6.2-astra' ($plans -join "`n")
         $r.reviewer.runtime=Ref $r.reviewer.runtime.path; $r.review.evidence=$r.reviewer.runtime
         $r.planner.runtime=Ref $r.planner.runtime.path; $r.planning.evidence=$r.planner.runtime
     }

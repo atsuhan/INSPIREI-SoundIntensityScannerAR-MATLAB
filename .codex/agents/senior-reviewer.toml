@@ -1,6 +1,6 @@
 name = "senior-reviewer"
 description = "視覚・空間の成果物を完了前にrender・画像・スクリーンショットで最終確認する上位モデルのread-only Agent。通常の差分レビューはreviewerを使う。"
-model = "gpt-6-astra"
+model = "gpt-6.2-astra"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

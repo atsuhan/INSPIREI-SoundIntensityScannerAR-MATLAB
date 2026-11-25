@@ -1,6 +1,6 @@
 name = "craft-builder"
 description = "視覚・空間・デザイン判断に品質が依存する作業の核心部分を上位モデルで実装するwrite Agent。機械的な部分はbuilderへ分ける。builderのエスカレーション先・引き継ぎ先。"
-model = "gpt-6-astra"
+model = "gpt-6.2-astra"
 model_reasoning_effort = "high"
 developer_instructions = """
 書き込み前にdocs/rules/common.md、docs/rules/project.md、関連する設計・受入条件・専門Agentの助言を読む。
