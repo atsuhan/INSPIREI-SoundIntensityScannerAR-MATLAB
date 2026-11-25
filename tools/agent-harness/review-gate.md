@@ -22,7 +22,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent-harness/Test-Rev
 
 雛形は `templates/review-record.example.json`。プレースホルダはPASSできない。対象は `target.commit` と全対象ファイルのSHA256、または `target.kind: artifact` と全ファイルSHA256。削除対象のSHA256だけ `absent` を使う。commit方式はHEAD一致と関連ファイルのcleanを要求する。artifact方式はレビュー時と現在のhash一致を要求し、commit後にも同じ対象ファイルを再照合できる。無関係なdirtyファイルは妨げない。最終成果物を変えたら再検収する。
 
-作者とreviewerは別ID。importantではresearcherの確認日付き証拠、上位plannerの計画PASS、plannerと別IDの上位reviewerが必要。通常reviewerはCodex `gpt-6.1-sol/high` またはClaude `opus/high`。importantはCodex `gpt-6-astra/high` またはClaude `fable/high`。自己申告やAgent定義だけではruntime証拠にならない。
+作者とreviewerは別ID。importantではresearcherの確認日付き証拠、上位plannerの計画PASS、plannerと別IDの上位reviewerが必要。通常reviewerはCodex `gpt-6.2-sol/high` またはClaude `opus/high`。importantはCodex `gpt-6.2-astra/high` またはClaude `fable/high`。自己申告やAgent定義だけではruntime証拠にならない。
 
 reviewerの**ネイティブassistant出力**に次の1行を残す。出力は作者が代筆せず、レビュー用promptで書式を指定する。targetは記録と完全に同じcommit／path／hash、acceptanceは要求ID全件、statusは検収結果。FAILをPASSに書換えない。
 
@@ -55,7 +55,7 @@ PLAN_GATE_RESULT: {"status":"PASS","acceptance":["AC-1"],"scopeFiles":["example/
 `docs/rules/project.md` の厳しい条件を独立検収に含める。機械検査へ追加する場合、repo所有の `docs/rules/review-policy.json` を置く。呼出側の `-PolicyPath` は追加条件としてのみ使い、repo policyを置換しない。例:
 
 ```json
-{"schemaVersion":1,"classification":"important","allowedReviewerModels":["gpt-6-astra","fable"],"requiredAcceptance":["DEVICE-1"],"requiredValidationIds":["device-run"],"requireVisual":true,"requireDevice":true}
+{"schemaVersion":1,"classification":"important","allowedReviewerModels":["gpt-6.2-astra","fable"],"requiredAcceptance":["DEVICE-1"],"requiredValidationIds":["device-run"],"requireVisual":true,"requireDevice":true}
 ```
 
 requiredAcceptance／requiredValidationIdsは共通条件へ追加し、classificationはimportantに強める方向だけ、allowedReviewerModelsは共通最低条件を満たすモデルの絞込みだけに使う。複数policyの受入／検証IDは和集合、visual／device条件はOR、モデル集合は積集合として必ず厳しい側を維持する。製品契約を緩めるためにpolicyや記録を編集しない。自然言語の製品契約の全内容をスクリプトだけで評価できるわけではない。

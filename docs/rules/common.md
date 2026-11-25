@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.16
+Harness-Version: 1.0.17
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
@@ -81,11 +81,11 @@ Harness-Version: 1.0.16
 
 ### モデル選択（作業種別で決める・DEFAULT）
 
-- 上位モデルはClaude `fable`、Codex `gpt-6-astra`（Astra）。Codex `gpt-6.1-sol`（Sol）とClaude `opus` を2番手、Claude `sonnet`／`haiku` をそれ以下として扱う。上位モデルは週間枠が別で消費が速いため、品質差が出る工程だけに使う。
-- 上位モデルを使うのは、品質が視覚・空間・デザイン判断に依存する作業の判断の核心部分とする。例: 回路・基板の配置・配線・シルク、機構・3D形状、UI・画面レイアウト、Unityシーンの見た目、Webデザイン、DSP・検出アルゴリズムの設計とチューニング、顧客へ渡す成果物の仕上げ。これを `craft-builder`（Claude `fable`／Codex `gpt-6-astra`、effort high）が担う。
-- 計画・設計・受入条件の決定は `planner`（Claude `opus`／Codex `gpt-6.1-sol`、effort high）で行う。視覚・空間の構成そのものを決める難所だけ、親が上位モデルを個別に指定する。
-- 同じタスク内でも、機械的な部分（つなぎ込み、データ受け渡し、テスト追加、整形、リネーム、パス更新、文言修正、再現手順のあるバグ修正）は `builder`（Claude `sonnet`／Codex `gpt-6.1-sol`）へ分ける。craft-builderには判断の核心部分だけを渡し、判断済みの後工程を抱え込ませない。
-- 通常の差分・回帰レビューは `reviewer`（Claude `opus`／Codex `gpt-6.1-sol`）が行う。`senior-reviewer`（上位モデル）は、視覚・空間の成果物の最終確認（実際のrender・画像・スクリーンショットを見る検収）に限って使う。
+- 上位モデルはClaude `fable`、Codex `gpt-6.2-astra`（Astra）。Codex `gpt-6.2-sol`（Sol）とClaude `opus` を2番手、Claude `sonnet`／`haiku` をそれ以下として扱う。上位モデルは週間枠が別で消費が速いため、品質差が出る工程だけに使う。
+- 上位モデルを使うのは、品質が視覚・空間・デザイン判断に依存する作業の判断の核心部分とする。例: 回路・基板の配置・配線・シルク、機構・3D形状、UI・画面レイアウト、Unityシーンの見た目、Webデザイン、DSP・検出アルゴリズムの設計とチューニング、顧客へ渡す成果物の仕上げ。これを `craft-builder`（Claude `fable`／Codex `gpt-6.2-astra`、effort high）が担う。
+- 計画・設計・受入条件の決定は `planner`（Claude `opus`／Codex `gpt-6.2-sol`、effort high）で行う。視覚・空間の構成そのものを決める難所だけ、親が上位モデルを個別に指定する。
+- 同じタスク内でも、機械的な部分（つなぎ込み、データ受け渡し、テスト追加、整形、リネーム、パス更新、文言修正、再現手順のあるバグ修正）は `builder`（Claude `sonnet`／Codex `gpt-6.2-sol`）へ分ける。craft-builderには判断の核心部分だけを渡し、判断済みの後工程を抱え込ませない。
+- 通常の差分・回帰レビューは `reviewer`（Claude `opus`／Codex `gpt-6.2-sol`）が行う。`senior-reviewer`（上位モデル）は、視覚・空間の成果物の最終確認（実際のrender・画像・スクリーンショットを見る検収）に限って使う。
 - 判断に迷う場合: 人間が「見て」品質を判断する部分なら上位モデル、それ以外は2番手以下。
 
 ### 上位モデルの消費ペース（DEFAULT）

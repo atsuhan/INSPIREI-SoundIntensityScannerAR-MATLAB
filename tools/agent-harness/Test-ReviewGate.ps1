@@ -266,7 +266,7 @@ try {
     $repoPolicy = Join-Path $repo 'docs/rules/review-policy.json'
     if (Test-Path -LiteralPath $repoPolicy) { $policyFiles += $repoPolicy }
     if ($PolicyPath) { $policyFiles += (FullPath $PolicyPath) }
-    $policy = [pscustomobject]@{allowedReviewerModels=@('gpt-6-astra','gpt-6.1-sol','fable','opus');requiredAcceptance=@();requiredValidationIds=@();requireVisual=$false;requireDevice=$false}
+    $policy = [pscustomobject]@{allowedReviewerModels=@('gpt-6.2-astra','gpt-6.2-sol','fable','opus');requiredAcceptance=@();requiredValidationIds=@();requireVisual=$false;requireDevice=$false}
     foreach ($policyFile in @($policyFiles | Sort-Object -Unique)) {
         $extra = Get-Content -LiteralPath $policyFile -Raw -Encoding UTF8 | ConvertFrom-Json
         if ($extra.schemaVersion -ne 1) { Deny 'Unsupported project review policy schema' }
@@ -280,7 +280,7 @@ try {
         if ($extra.classification -eq 'important') { $Classification = 'important' }
         if ($extra.allowedReviewerModels) {
             # Narrowing is supported; a policy cannot authorize a lower common minimum.
-            $validModels = @('gpt-6-astra','gpt-6.1-sol','fable','opus')
+            $validModels = @('gpt-6.2-astra','gpt-6.2-sol','fable','opus')
             if (@($extra.allowedReviewerModels | Where-Object { $_ -notin $validModels }).Count) { Deny 'Project policy contains unsupported reviewer model' }
             $policy.allowedReviewerModels = @($policy.allowedReviewerModels | Where-Object { $_ -in $extra.allowedReviewerModels })
         }
@@ -326,13 +326,13 @@ try {
         }
     } elseif ($record.target.kind -ne 'artifact') { Deny 'Target requires a commit or explicit artifact kind with exact file hashes' }
     if (-not $record.author.id -or -not $record.reviewer.id -or $record.author.id -ceq $record.reviewer.id) { Deny 'Reviewer must be independent of author' }
-    $reviewerModel = if ($record.reviewer.platform -eq 'codex') { if ($Classification -eq 'important') { 'gpt-6-astra' } else { 'gpt-6.1-sol' } } else { if ($Classification -eq 'important') { 'fable' } else { 'opus' } }
+    $reviewerModel = if ($record.reviewer.platform -eq 'codex') { if ($Classification -eq 'important') { 'gpt-6.2-astra' } else { 'gpt-6.2-sol' } } else { if ($Classification -eq 'important') { 'fable' } else { 'opus' } }
     if ($reviewerModel -notin $policy.allowedReviewerModels) { Deny 'Reviewer does not satisfy stricter project policy' }
     Runtime $record.reviewer 'reviewer' $reviewerModel
     NativeDecision 'reviewer' 'REVIEW_GATE_RESULT'
     if ($Classification -eq 'important') {
         if (-not $record.planner.id -or $record.planner.id -ceq $record.reviewer.id) { Deny 'Senior reviewer must be independent of planner' }
-        Runtime $record.planner 'planner' $(if ($record.planner.platform -eq 'codex') { 'gpt-6-astra' } else { 'fable' })
+        Runtime $record.planner 'planner' $(if ($record.planner.platform -eq 'codex') { 'gpt-6.2-astra' } else { 'fable' })
         # Plan approves acceptance and source boundary; it precedes finished artifact hashes.
         $planMatches = @(NativeResults 'planner' 'PLAN_GATE_RESULT')
         if ($planMatches.Count -ne 1) { Deny 'Planner requires exactly one native PLAN_GATE_RESULT' }
