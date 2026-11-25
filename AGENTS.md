@@ -8,6 +8,8 @@
 3. `docs/index.md`
 4. 現在の作業に関係する文書だけ
 
+親フォルダに製品フォルダ（`../docs/direction.md` がある）があれば、作業前に読む。repoをまたぐ方針の正本はそちらで、方針の相談と複数repoへの反映は製品フォルダで行う。
+
 全docsを一括で読み込まない。人間向けの現在地は `STATUS.md`、Agentの作業台帳は `docs/roadmap/MILESTONES.md` とする。
 
 ルールの優先順位:
