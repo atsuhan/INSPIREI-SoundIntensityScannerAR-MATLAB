@@ -1,7 +1,7 @@
 # INSPIREI Common Agent Rules
 
 <!-- managed-by: INSPIREI/agent-harness -->
-Harness-Version: 1.0.17
+Harness-Version: 1.0.18
 
 この文書は全repo共通です。各repo固有の契約は `project.md` を正本とします。
 
@@ -154,6 +154,7 @@ Harness-Version: 1.0.17
 
 - 人間向けの現在地はルートの `STATUS.md` とする。
 - Agentの作業台帳は `docs/roadmap/MILESTONES.md` とする。
+- 製品フォルダ（`INSPIREI-OTOMIRU/`、`INSPIREI-PipeScanner/`、`INSPIREI-SISAR/`、`INSPIREI-JRC/`）は、その製品の作業の既定の入口とする（2026-11-25 井上さん承認）。repoをまたぐ方針の正本は製品フォルダの `docs/direction.md`、その決定記録は `docs/decisions.md`。依頼の対象repoは製品フォルダの振り分け表でAgentが決め、ユーザーに「どのrepoに沿って」と指定させない。repoをまたぐ決定は製品フォルダへ上げ、影響する子repoの MILESTONES・spec・`project.md` をまとめて更新する。子repoだけで閉じる決定は子repoの decision に書く。
 - `docs/rules/project.md`、`docs/index.md`、Milestone、設計書、decisionは各repoが所有し、親ハーネス更新では上書きしない。
 - 大規模または長期の設計だけ `docs/specs/` に置く。小変更のために文書を増やさない。
 - 繰り返す手順はSkillまたはスクリプトへ移し、一時ログや会話の要約をdocsへ蓄積しない。
