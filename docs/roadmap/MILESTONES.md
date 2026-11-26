@@ -4,6 +4,7 @@
 > **書式規約（末尾）を崩さない**。運用ループは `.agents/skills/development-loop/SKILL.md`。
 
 **状態:** フェーズ定義済み・タスク未分解（2026-07-17 に milestones.json から移行）
+**方針（2026-11-26 井上さん決定。製品フォルダ `../docs/decisions.md`）:** SISAR は全面的に作り直す。旧系統 V4 の Unity 先行実装（四点／A／B-format）を MATLAB へ移して照合することはしない。MATLAB は次世代の原理（p-u、1次アンビソニックス）に合わせて数値正本を起こす（タスクはハードウェア検証の着手時に起こす）。下の P1（p-p 法）は旧系統の計画として残す。
 **採番:** `P<フェーズ>-<連番>`（backlog は `BL-<連番>`）。番号の欠番再利用は禁止。新タスクは各フェーズ末尾に連番追加
 
 ---
@@ -38,6 +39,7 @@
   - 触るファイル: functions/acoustic/calcIntensityVector.m（新規）, tests/testCalcIntensityVector.m（新規）, docs/decisions/decisions.md（追記）
   - 確認済み: repo・履歴にマイク配置の記録なし
   - メモ: 配置が確定するまで着手不可（ユーザー確認待ち: マイク局所座標・ch順、WAVと計測点の対応、感度校正、Sample Rate 'sixteen' の真値）
+  - メモ(2026-11-26): 旧系統 V4 の四点配置・ch順は製品フォルダ `../docs/contracts/README.md` に登録した（Unity実装の現行値。実プローブとの一致は未検証）。次世代の配置は `INSPIREI-SISAR-Hardware` が決める。
 - [ ] **P1-5** WAV計測キャンペーンのプロジェクト雛形と可視化・CSV出力 ｜優先:中｜複雑度:3｜依存:P1-4｜並行:不可
   - 詳細: `projects/example_wav/`（config.m: sensitivity [Pa/FS], micPos, band, runAnalysis.m: WAV→calcIntensityVector→plotVectorField→exportCsv 'vector'）。WAV と計測点位置の対応方法はユーザー確認後に確定。exportCsv の列契約は変更しない。`Value` は dB（re 1e-12）、NormVec は正規化方向
   - 受け入れ条件: 着手時に planner が定義。最低限: 合成 WAV（tempdir 生成、data/ には置かない）で runAnalysis が Octave でエラーなし、CSV 列ヘッダが既存契約と一致
